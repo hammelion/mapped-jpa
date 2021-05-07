@@ -87,11 +87,6 @@ public class MappedRepository<J extends JpaRepository<E, ID>, D, E, ID> implemen
     }
 
     @Override
-    public void deleteAllById(Iterable<? extends ID> ids) {
-        repository.deleteAllById(ids);
-    }
-
-    @Override
     public void deleteAll(Iterable<? extends D> entities) {
         repository.deleteAll(fromDtoList(entities));
     }
@@ -122,23 +117,8 @@ public class MappedRepository<J extends JpaRepository<E, ID>, D, E, ID> implemen
     }
 
     @Override
-    public <S extends D> List<S> saveAllAndFlush(Iterable<S> entities) {
-        return callList(() -> repository.saveAllAndFlush(fromDtoList(entities)));
-    }
-
-    @Override
     public void deleteInBatch(Iterable<D> entities) {
         repository.deleteInBatch(fromDtoList(entities));
-    }
-
-    @Override
-    public void deleteAllInBatch(Iterable<D> entities) {
-        repository.deleteAllInBatch(fromDtoList(entities));
-    }
-
-    @Override
-    public void deleteAllByIdInBatch(Iterable<ID> ids) {
-        repository.deleteAllByIdInBatch(ids);
     }
 
     @Override
@@ -149,11 +129,6 @@ public class MappedRepository<J extends JpaRepository<E, ID>, D, E, ID> implemen
     @Override
     public D getOne(ID id) {
         return call(() -> repository.getOne(id));
-    }
-
-    @Override
-    public D getById(ID id) {
-        return call(() -> repository.getById(id));
     }
 
     @Override
