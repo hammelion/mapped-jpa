@@ -1,0 +1,82 @@
+apply plugin: 'java'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation group: 'org.springframework.data', name: 'spring-data-jpa', version: '2.5.0'
+    implementation 'io.vavr:vavr:0.10.3'
+    implementation 'one.util:streamex:0.7.3'
+}
+
+apply plugin: 'signing'
+
+signing {
+    sign configurations.archives
+}
+
+task javadocJar(type: Jar) {
+    classifier = 'javadoc'
+    from javadoc
+}
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+artifacts {
+    archives javadocJar, sourcesJar
+}
+
+apply plugin: 'maven'
+
+archivesBaseName = 'mapped-jpa'
+group 'com.github.hammelion'
+version '2.5.0.0'
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            // Sign POM
+            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+            // Destination
+            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                authentication(userName: nexusUsername, password: nexusPassword)
+            }
+            snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+                authentication(userName: nexusUsername, password: nexusPassword)
+            }
+
+            // Add required metadata to POM
+            pom.project {
+                name 'mapped-jpa'
+                description 'Mapped JPA Repository'
+                url 'https://github.com/hammelion/mapped-jpa'
+                inceptionYear '2021'
+
+                scm {
+                    url 'https://github.com/hammelion/mapped-jpa'
+                    connection 'scm:https://github.com/hammelion/mapped-jpa.git'
+                    developerConnection 'scm:https://github.com/hammelion/mapped-jpa.git'
+                }
+
+                licenses {
+                    license {
+                        name 'The Apache Software License, Version 2.0'
+                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                        distribution 'repo'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id 'hammelion'
+                        name 'Michael Kraft'
+                        email 'hammelion@gmail.com'
+                    }
+                }
+            }
+        }
+    }
+}
