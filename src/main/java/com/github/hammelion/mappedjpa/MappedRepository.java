@@ -21,6 +21,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @param <D>  Domain object (DTO)
  * @param <ID> Id of an entity
  */
+@SuppressWarnings({"unchecked", "OptionalUsedAsFieldOrParameterType", "unused"})
 public class MappedRepository<J extends JpaRepository<E, ID>, D, E, ID> implements JpaRepository<D, ID> {
     protected final J repository;
     protected final DtoMapper<D, E> mapper;
@@ -217,5 +218,3 @@ public class MappedRepository<J extends JpaRepository<E, ID>, D, E, ID> implemen
         return Example.of(fromDto(example.getProbe()));
     }
 }
-
-
