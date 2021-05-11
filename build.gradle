@@ -5,9 +5,12 @@ repositories {
 }
 
 dependencies {
-    implementation group: 'org.springframework.data', name: 'spring-data-jpa', version: '2.2.7.RELEASE'
+    implementation (group: 'org.springframework.data', name: 'spring-data-jpa', version: '2.2.7.RELEASE') {
+        exclude group: 'org.springframework'
+        exclude group: 'org.slf4j'
+        exclude group: 'org.aspectj'
+    }
     implementation 'io.vavr:vavr:0.10.3'
-    implementation 'one.util:streamex:0.7.3'
 }
 
 apply plugin: 'signing'
@@ -32,7 +35,7 @@ apply plugin: 'maven'
 
 archivesBaseName = 'mapped-jpa'
 group 'com.github.hammelion'
-version '2.2.7.0'
+version '2.2.7.1'
 
 uploadArchives {
     repositories {

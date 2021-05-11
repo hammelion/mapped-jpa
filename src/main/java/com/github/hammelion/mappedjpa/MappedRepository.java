@@ -7,7 +7,6 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 import io.vavr.control.Try;
-import one.util.streamex.StreamEx;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -170,7 +169,7 @@ public class MappedRepository<J extends JpaRepository<E, ID>, D, E, ID> implemen
     private <S extends D> List<S> callList(
         Callable<List<E>> f
     ) {
-        return Try.of(() -> StreamEx.of(f.call()).map(e -> (S) mapper.toDto(e)).toList())
+        return Try.of(() -> f.call().stream().map(e -> (S) mapper.toDto(e)).collect(Collectors.toList()))
                   .getOrElseThrow(MappedRepository::runtimeException);
     }
 
