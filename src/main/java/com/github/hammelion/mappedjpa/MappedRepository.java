@@ -7,7 +7,6 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 import io.vavr.control.Try;
-import one.util.streamex.StreamEx;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,6 +21,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @param <D>  Domain object (DTO)
  * @param <ID> Id of an entity
  */
+@SuppressWarnings({"unchecked", "OptionalUsedAsFieldOrParameterType", "unused", "deprecation"})
 public class MappedRepository<J extends JpaRepository<E, ID>, D, E, ID> implements JpaRepository<D, ID> {
     protected final J repository;
     protected final DtoMapper<D, E> mapper;
@@ -195,7 +195,7 @@ public class MappedRepository<J extends JpaRepository<E, ID>, D, E, ID> implemen
     private <S extends D> List<S> callList(
         Callable<List<E>> f
     ) {
-        return Try.of(() -> StreamEx.of(f.call()).map(e -> (S) mapper.toDto(e)).toList())
+        return Try.of(() -> f.call().stream().map(e -> (S) mapper.toDto(e)).collect(Collectors.toList()))
                   .getOrElseThrow(MappedRepository::runtimeException);
     }
 
@@ -243,5 +243,3 @@ public class MappedRepository<J extends JpaRepository<E, ID>, D, E, ID> implemen
         return Example.of(fromDto(example.getProbe()));
     }
 }
-
-
